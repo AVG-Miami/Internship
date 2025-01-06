@@ -13,12 +13,14 @@ def add_moving_average(data, window_size=5):
 
 
 def calculate_and_display_average_price(data):
+    """ Вывод средней цены за период. """
     average = sum( data['Close'] ) / len( data['Close'] )
     print( f" Сумма значений за период = {sum( data['Close'] )}, количество значений= {len( data['Close'] )}, среднее "
            f'значение = {average}' )
 
 
 def notify_if_strong_fluctuations(data, threshold):
+    """ Функция уведомление о сильных колебаниях. """
     maximum = max( data['Close'] )
     minimum = min( data['Close'] )
     difference = round( (maximum - minimum) / minimum * 100, 2 )
