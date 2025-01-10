@@ -4,17 +4,20 @@ import data_plotting as dplt
 
 def main():
     print( "Добро пожаловать в инструмент получения и построения графиков биржевых данных." )
-    print("  А так же для вычисления средней цены за  период, и получения уведомления о сильных колебаниях первышающих ")
-    print("  первышающих заданый порог в % " )
     print(
-        "Вот несколько примеров биржевых тикеров, которые вы можете рассмотреть: AAPL (Apple Inc), GOOGL (Alphabet Inc), MSFT (Microsoft Corporation), AMZN (Amazon.com Inc), TSLA (Tesla Inc)." )
+        "  А так же для вычисления средней цены за  период, и получения уведомления о сильных колебаниях первышающих " )
+    print( "  первышающих заданый порог в % " )
     print(
-        "Общие периоды времени для данных о запасах включают: 1д, 5д, 1мес, 3мес, 6мес, 1г, 2г, 5г, 10л, с начала года, макс." )
+        "Вот несколько примеров биржевых тикеров, которые вы можете рассмотреть: AAPL (Apple Inc), GOOGL (Alphabet Inc),"
+        " MSFT (Microsoft Corporation), AMZN (Amazon.com Inc), TSLA (Tesla Inc)." )
+    print(
+        "Общие периоды времени для данных о запасах включают: 1д, 5д, 1мес, 3мес, 6мес, 1г, 2г, 5г, 10л, "
+        "с начала года, макс." )
 
-    ticker = input( "Введите тикер акции (например, «AAPL» для Apple Inc):»" )
+    ticker = input( "Введите тикер акции (например, «AAPL» для Apple Inc):»" ).upper()
     period = input( "Введите период для данных (например, '1mo' для одного месяца): " )
-    threshold = input( "Введите пороговое значение (в %) для уведомления о сильных колебаниях цены: ")
-
+    threshold = input( "Введите пороговое значение (в %) для уведомления о сильных колебаниях цены: " )
+    f_name = input( "Введите имя файла для экспорта в CSV фаил :" )
 
     # Fetch stock data
     stock_data = dd.fetch_stock_data( ticker, period )
@@ -26,10 +29,16 @@ def main():
     dd.calculate_and_display_average_price( stock_data )
 
     # уведомление о сильных колебаниях
-    dd.notify_if_strong_fluctuations(stock_data, threshold)
+    dd.notify_if_strong_fluctuations( stock_data, threshold )
 
     # Plot the data
-    dplt.create_and_save_plot( stock_data, ticker, period )
+    graphic = dplt.create_and_save_plot( stock_data, ticker, period )
+
+    # Экспорт в Exel
+    dplt.export_data_to_exel( stock_data, ticker, graphic )
+
+    # Экспорт в Exel
+    dplt.export_data_to_csv( stock_data, f_name )
 
 
 if __name__ == "__main__":
