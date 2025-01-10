@@ -37,7 +37,7 @@ def main():
     # Экспорт в Exel
     dplt.export_data_to_exel( stock_data, ticker, graphic )
 
-    # Экспорт в Exel
+    # Экспорт в CSV фаил
     dplt.export_data_to_csv( stock_data, f_name )
 
 
