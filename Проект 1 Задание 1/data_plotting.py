@@ -15,6 +15,8 @@ def create_and_save_plot(data, ticker, period, filename=None):
             dates = data.index.to_numpy()
             plt.plot( dates, data['Close'].values, label='Close Price' )
             plt.plot( dates, data['Moving_Average'].values, label='Moving Average' )
+            plt.plot( dates, data['RSI'].values, label='RSI' )
+            plt.plot( dates, data['MACD'].values, label='MACD' )
         else:
             print( "Информация о дате отсутствует или не имеет распознаваемого формата." )
             return
@@ -23,6 +25,8 @@ def create_and_save_plot(data, ticker, period, filename=None):
             data['Date'] = pd.to_datetime( data['Date'] )
         plt.plot( data['Date'], data['Close'], label='Close Price' )
         plt.plot( data['Date'], data['Moving_Average'], label='Moving Average' )
+        plt.plot( data['Date'], data['RSI'], label='RSI' )
+        plt.plot( data['Date'], data['MACD'], label='MACD' )
 
     plt.title( f"{ticker} Цена акций с течением времени" )
     plt.xlabel( "Дата" )
@@ -90,8 +94,8 @@ def export_data_to_exel(data, tikers, graphic):
     chart = BarChart()
     # добавляем в диаграмму выбранный диапазон значений
     chart.add_data( values, titles_from_data=True )
-    # привязываем диаграмму к ячейке `E2`
-    ws.add_chart( chart, "J2" )
+    # привязываем диаграмму к ячейке `L2`
+    ws.add_chart( chart, "l2" )
     # определяем размеры диаграммы в сантиметрах
     chart.width = 20
     chart.height = 5
