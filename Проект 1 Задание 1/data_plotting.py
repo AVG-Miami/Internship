@@ -13,22 +13,36 @@ def create_and_save_plot(data, ticker, period, filename=None):
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype( data.index ):
             dates = data.index.to_numpy()
+            plt.subplot( 3, 1, 1 )
             plt.plot( dates, data['Close'].values, label='Close Price' )
             plt.plot( dates, data['Moving_Average'].values, label='Moving Average' )
+            plt.title( f"{ticker} Цена акций с течением времени" )
+            plt.legend()
+            plt.subplot( 3, 1, 2 )
             plt.plot( dates, data['RSI'].values, label='RSI' )
+            plt.legend()
+            plt.subplot( 3, 1, 3 )
             plt.plot( dates, data['MACD'].values, label='MACD' )
+            plt.plot( dates, data['MACD_H'].values, label='MACD_H' )
+            plt.plot( dates, data['MACD_S'].values, label='MACD_S' )
+            plt.legend()
         else:
             print( "Информация о дате отсутствует или не имеет распознаваемого формата." )
             return
     else:
         if not pd.api.types.is_datetime64_any_dtype( data['Date'] ):
             data['Date'] = pd.to_datetime( data['Date'] )
+
+        plt.subplot( 3, 1, 1 )
         plt.plot( data['Date'], data['Close'], label='Close Price' )
         plt.plot( data['Date'], data['Moving_Average'], label='Moving Average' )
+        plt.subplot( 3, 1, 2 )
         plt.plot( data['Date'], data['RSI'], label='RSI' )
+        plt.subplot( 3, 1, 3 )
         plt.plot( data['Date'], data['MACD'], label='MACD' )
+        plt.plot( data['Date'], data['MACD_H'], label='MACD_H' )
+        plt.plot( data['Date'], data['MACD_S'], label='MACD_S' )
 
-    plt.title( f"{ticker} Цена акций с течением времени" )
     plt.xlabel( "Дата" )
     plt.ylabel( "Цена" )
     plt.legend()
@@ -94,8 +108,8 @@ def export_data_to_exel(data, tikers, graphic):
     chart = BarChart()
     # добавляем в диаграмму выбранный диапазон значений
     chart.add_data( values, titles_from_data=True )
-    # привязываем диаграмму к ячейке `L2`
-    ws.add_chart( chart, "l2" )
+    # привязываем диаграмму к ячейке `m2`
+    ws.add_chart( chart, "m2" )
     # определяем размеры диаграммы в сантиметрах
     chart.width = 20
     chart.height = 5
@@ -108,3 +122,22 @@ def export_data_to_csv(data, f_name):
     df = pd.DataFrame( data )
     df.to_csv( f'{f_name}.csv', index=False )
     print( f'Write to file "{f_name}.csv" complete.' )
+
+
+def my_rg():
+    # Создание данных для графиков
+    x = [1, 2, 3, 4, 5]
+    y1 = [1, 4, 9, 16, 25]
+    y2 = [1, 2, 3, 4, 5]
+
+    # Создание первого графика
+    plt.subplot( 2, 1, 1 )  # указываем 2 строки, 1 столбец, выбираем первое место
+    plt.plot( x, y1 )
+    plt.title( 'График 1' )
+
+    # Создание второго графика
+    plt.subplot( 2, 1, 2 )  # указываем 2 строки, 1 столбец, выбираем второе место
+    plt.plot( x, y2 )
+    plt.title( 'График 2' )
+
+    plt.show()
