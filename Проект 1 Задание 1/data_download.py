@@ -1,6 +1,8 @@
 import yfinance as yf
+
+
 # import talib as ta
-import pandas_ta as pta
+# import pandas_ta as pta
 
 
 def fetch_stock_data(ticker, period='1mo'):
@@ -35,36 +37,34 @@ def notify_if_strong_fluctuations(data, threshold):
             f" Разница между max и min ценой составляет {difference} % от min цены, что превышает заданный порг в {threshold} %" )
 
 
-def add_rsi_calculate(data, window_size=5):
+def add_rsi_calculate(data, periods=5):
     """ Добавление RSI в dataset  """
-    #    data['RSI'] = data['Close'].rolling( window=window_size ).mean()
-    #    data['RSI'] = pta.rsi(data['Close'], length = len(data['Close']))
 
-    periods = len( data['Close'] )
     close_delta = data['Close'].diff()
     # Делаем две серий: одну для низких закрытий и одну для высоких закрытий
     up = close_delta.clip( lower=0 )
     down = -1 * close_delta.clip( upper=0 )
-    # Использование экспоненциальной скользящей средней
-    # ma_up = up.ewm( com=periods - 1, adjust=True, min_periods=periods ).mean()
-    # ma_down = down.ewm( com=periods - 1, adjust=True, min_periods=periods ).mean()
-    # Использование простой скользящей средней
+    # Используем простую скользящую среднюю
     ma_up = up.rolling( window=periods ).mean()
     ma_down = down.rolling( window=periods ).mean()
-
-    print( 'ma_up' )
-    print( ma_up )
-    print( 'ma_down' )
-    print( ma_down )
     rsi = ma_up / ma_down
     rsi = 100 - (100 / (1 + rsi))
-    print( 'RSI' )
-    print( rsi )
     data['RSI'] = rsi
 
 
-def add_macd_calculate(data, window_size=5):
+def add_macd_calculate(data, fast=None, slow=None, signal=None, offset=None, **kwargs):
     """ Добавление MACD в dataset  """
-    #    data['RSI'] = data['Close'].rolling( window=window_size ).mean()
-    data['MACD'] = pta.macd( data['Close'], length=len( data['Close'] ) )
-    pass
+
+    # Получаем 26-дневную EMA цены закрытия
+    k = data['Close'].ewm( span=12, adjust=False, min_periods=12 ).mean()
+    # Получаем 12-дневную EMA цены закрытия
+    d = data['Close'].ewm( span=26, adjust=False, min_periods=26 ).mean()
+    # Вычитаем 26-дневную EMA из 12-дневной EMA, чтобы получить MACD
+    macd = k - d
+    data['MACD'] = data.index.map( macd )
+    # Получаем 9-дневную EMA MACD для линии срабатывания
+    macd_s = macd.ewm( span=9, adjust=False, min_periods=9 ).mean()
+    # Рассчитаем разницу между MACD - Триггером для значения Конвергенции/Дивергенции
+    macd_h = macd - macd_s
+    data['MACD_H'] = data.index.map( macd_h )
+    data['MACD_S'] = data.index.map( macd_s )
