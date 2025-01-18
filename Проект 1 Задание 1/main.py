@@ -15,12 +15,17 @@ def main():
         "с начала года, макс." )
 
     ticker = input( "Введите тикер акции (например, «AAPL» для Apple Inc):»" ).upper()
-    period = input( "Введите период для данных (например, '1mo' для одного месяца): " )
+    period = input(
+        "Введите период для данных (например, '1mo' для одного месяца) или нажмите 'Enter' для ввода периода: " )
+    if period == '':
+        start_date = input( "Введите дату начала периода в формате (2022-01-02) :" )
+        end_date = input( "Введите дату конца периода в формате (2022-01-02) :" )
+        interval = input( "Введите интервал (1d, 1mo) по умолчанию 1d :" )
     threshold = input( "Введите пороговое значение (в %) для уведомления о сильных колебаниях цены: " )
     f_name = input( "Введите имя файла для экспорта в CSV фаил :" )
 
     # Fetch stock data
-    stock_data = dd.fetch_stock_data( ticker, period )
+    stock_data = dd.fetch_stock_data( ticker, period, start_date, end_date, interval )
 
     # Add moving average to the data
     stock_data = dd.add_moving_average( stock_data )
