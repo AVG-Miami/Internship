@@ -42,6 +42,14 @@ def main():
     # Add MACD to the data
     macd_data = dd.add_macd_calculate(stock_data)
 
+    # Add STD_VAL to the data
+    """Расчёт стандартного отклонения цены закрытия"""
+    std_val_data = dd.add_std_val_calculate(stock_data)
+
+    # Add BOLLINDGER_VAL to the data
+    """Расчёт линий Боллинджера"""
+    bollinger_data = dd.add_bollinger_calculate(stock_data)
+
     #  Вывод средней цены за период
     dd.calculate_and_display_average_price(stock_data)
 
