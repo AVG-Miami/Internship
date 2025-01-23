@@ -10,23 +10,29 @@ from time import sleep
 # from matplotlib import style
 
 def create_and_save_plot(data, ticker, period, stl="classic", filename=None):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 15))
     plt.style.use(stl)
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()
-            plt.subplot(3, 1, 1)
+            plt.subplot(5, 1, 1)
             plt.plot(dates, data['Close'].values, label='Close Price')
             plt.plot(dates, data['Moving_Average'].values, label='Moving Average')
+            plt.plot(dates, data['BB_high'].values, label='Bolinger_high')
+            plt.plot(dates, data['BB_low'].values, label='Bolinger_low')
             plt.title(f"{ticker} Цена акций с течением времени")
             plt.legend()
-            plt.subplot(3, 1, 2)
+            plt.subplot(5, 1, 2)
             plt.plot(dates, data['RSI'].values, label='RSI')
             plt.legend()
-            plt.subplot(3, 1, 3)
+            plt.subplot(5, 1, 3)
             plt.plot(dates, data['MACD'].values, label='MACD')
             plt.plot(dates, data['MACD_H'].values, label='MACD_H')
             plt.plot(dates, data['MACD_S'].values, label='MACD_S')
+            plt.legend()
+            plt.subplot(5, 1, 4)
+            plt.plot(dates, data['STD_VAL'].values, label='STD_VAL')
+            # plt.plot(dates, data['STD_VAL2'].values, label='STD_VAL2')
             plt.legend()
         else:
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
@@ -35,16 +41,20 @@ def create_and_save_plot(data, ticker, period, stl="classic", filename=None):
         if not pd.api.types.is_datetime64_any_dtype(data['Date']):
             data['Date'] = pd.to_datetime(data['Date'])
 
-        plt.subplot(3, 1, 1)
+        plt.subplot(5, 1, 1)
         plt.plot(data['Date'], data['Close'], label='Close Price')
+        plt.plot(data['Date'], data['BB_high'], label='Bolinger_high')
+        plt.plot(data['Date'], data['BB_low'], label='Bolinger_low')
         plt.plot(data['Date'], data['Moving_Average'], label='Moving Average')
-        plt.subplot(3, 1, 2)
+        plt.subplot(5, 1, 2)
         plt.plot(data['Date'], data['RSI'], label='RSI')
-        plt.subplot(3, 1, 3)
+        plt.subplot(5, 1, 3)
         plt.plot(data['Date'], data['MACD'], label='MACD')
         plt.plot(data['Date'], data['MACD_H'], label='MACD_H')
         plt.plot(data['Date'], data['MACD_S'], label='MACD_S')
-
+        plt.subplot(5, 1, 4)
+        plt.plot(data['Date'].data['STD_VAL'], label='STD_VAL')
+        # plt.plot(data['Date'].data['STD_VAL2'], label='STD_VAL2')
     plt.xlabel("Дата")
     plt.ylabel("Цена")
     plt.legend()
@@ -110,8 +120,8 @@ def export_data_to_exel(data, tikers, graphic):
     chart = BarChart()
     # добавляем в диаграмму выбранный диапазон значений
     chart.add_data(values, titles_from_data=True)
-    # привязываем диаграмму к ячейке `m2`
-    ws.add_chart(chart, "m2")
+    # привязываем диаграмму к ячейке `p2`
+    ws.add_chart(chart, "p2")
     # определяем размеры диаграммы в сантиметрах
     chart.width = 20
     chart.height = 5
