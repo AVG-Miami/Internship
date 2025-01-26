@@ -4,6 +4,8 @@ from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
 from openpyxl.chart import BarChart, Reference
 import os.path
+import networkx as nx
+from plotly.offline import iplot
 from time import sleep
 
 
@@ -31,16 +33,13 @@ def create_and_save_plot(data, ticker, period, stl="classic", filename=None):
             plt.plot(dates, data['MACD_S'].values, label='MACD_S')
             plt.legend()
             plt.subplot(5, 1, 4)
-            plt.plot(dates, data['STD_VAL'].values, label='STD_VAL')
-            # plt.plot(dates, data['STD_VAL2'].values, label='STD_VAL2')
-            plt.legend()
+            plt.plot(dates, data['STD_DEV'].values, label='STD_DEV')
         else:
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
             return
     else:
         if not pd.api.types.is_datetime64_any_dtype(data['Date']):
             data['Date'] = pd.to_datetime(data['Date'])
-
         plt.subplot(5, 1, 1)
         plt.plot(data['Date'], data['Close'], label='Close Price')
         plt.plot(data['Date'], data['BB_high'], label='Bolinger_high')
@@ -53,8 +52,7 @@ def create_and_save_plot(data, ticker, period, stl="classic", filename=None):
         plt.plot(data['Date'], data['MACD_H'], label='MACD_H')
         plt.plot(data['Date'], data['MACD_S'], label='MACD_S')
         plt.subplot(5, 1, 4)
-        plt.plot(data['Date'].data['STD_VAL'], label='STD_VAL')
-        # plt.plot(data['Date'].data['STD_VAL2'], label='STD_VAL2')
+        plt.plot(data['Date'].data['STD_DEV'], label='STD_DEV')
     plt.xlabel("Дата")
     plt.ylabel("Цена")
     plt.legend()
