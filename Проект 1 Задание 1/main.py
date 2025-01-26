@@ -1,5 +1,6 @@
 import data_download as dd
 import data_plotting as dplt
+import interactive_plotly as inplt
 
 
 def main():
@@ -44,7 +45,7 @@ def main():
 
     # Add STD_VAL to the data
     """Расчёт стандартного отклонения цены закрытия"""
-    std_val_data = dd.add_std_val_calculate(stock_data)
+    std_val_data = dd.add_std_dev_calculate(stock_data)
 
     # Add BOLLINDGER_VAL to the data
     """Расчёт линий Боллинджера"""
@@ -64,6 +65,9 @@ def main():
 
     # Экспорт в CSV фаил
     dplt.export_data_to_csv(stock_data, f_name)
+
+    # InteractivePlot the data
+    interactive_graphic = inplt.create_and_save_int_plot2(stock_data, ticker, period, stl)
 
 
 if __name__ == "__main__":
