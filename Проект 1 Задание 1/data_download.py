@@ -73,16 +73,16 @@ def add_macd_calculate(data, fast=None, slow=None, signal=None, offset=None, **k
     data['MACD_S'] = data.index.map(macd_s)
 
 
-def add_std_val_calculate(data, window_size=5):
+def add_std_dev_calculate(data, window_size=5):
     """ Добавление STD_VAL стандартного отклонения в dataset  """
     print(len(data['Close']))
     average = sum(data['Close']) / len(data['Close'])
     #    data['STD_VAL2'] = ((data['Close']-average) ** 2) ** 0.5
-    data['STD_VAL'] = (((data['Close'] - average) ** 2) ** 0.5).rolling(window=window_size).mean()
+    data['STD_DEV'] = (((data['Close'] - average) ** 2) ** 0.5).rolling(window=window_size).mean()
 
 
 def add_bollinger_calculate(data):
     """ Добавление линий Болльнджера в dataset  """
     average = sum(data['Close']) / len(data['Close'])
-    data['BB_high'] = data['Moving_Average'] + 2 * data['STD_VAL']
-    data['BB_low'] = data['Moving_Average'] - 2 * data['STD_VAL']
+    data['BB_high'] = data['Moving_Average'] + 2 * data['STD_DEV']
+    data['BB_low'] = data['Moving_Average'] - 2 * data['STD_DEV']
